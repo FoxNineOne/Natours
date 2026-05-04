@@ -13,13 +13,47 @@ const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 const viewRouter = require("./routes/viewRoutes");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 // 1) Global Middlewares
+
 // Security HTTP headers
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "https://unpkg.com",
+          "https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js",
+        ],
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+          "https://*.tile.openstreetmap.org",
+          "https://tile.openstreetmap.org",
+        ],
+        connectSrc: [
+          "'self'",
+          "https://unpkg.com",
+          "https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.map",
+        ],
+        styleSrc: [
+          "'self'",
+          "https://unpkg.com",
+          "https://fonts.googleapis.com",
+          "'unsafe-inline'",
+        ],
+        fontSrc: ["'self'", "https:", "data:", "https://fonts.gstatic.com"],
+      },
+    },
+  }),
+);
 
 // Logging if in Dev
 if (process.env.NODE_ENV === "development") {
@@ -37,6 +71,7 @@ app.use("/api", limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
 
 // Data sanitisation against NoSQL query injections
 app.use(mongoSanitize());
@@ -65,7 +100,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  //console.log(req.headers);
+  console.log(req.cookies);
   next();
 });
 
