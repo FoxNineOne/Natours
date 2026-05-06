@@ -1,0 +1,14 @@
+extends base
+
+block content
+  main.main
+    .error
+      .error__title
+        h2.heading-secondary.heading-secondary--error Uh oh! Something went wrong!   
+        h2.error__emoji 😢 🤯
+      .error__msg= msg
+      | 
+      br
+      |
+      img(src="https://api.tinyfox.dev/img?animal=fox", alt="Random fox", style="max-width: 400px; width: 100%, height: auto;")
+      p Enjoy a fox 

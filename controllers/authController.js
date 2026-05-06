@@ -65,32 +65,44 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-// Only for rendered pages, will not  error
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  if (req.cookies.jwt) {
-    // 1) Verify token is valid
-    const decoded = await promisify(jwt.verify)(
-      req.cookies.jwt,
-      process.env.JWT_SECRET,
-    );
+exports.logout = (req, res) => {
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: "success" });
+};
 
-    // 2) If success, check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-      return next(
-        new AppError("User belonging to this token does not exist!", 401),
+// Only for rendered pages, will not  error
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // 1) Verify token is valid
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET,
       );
-    }
-    // 3) Check if user changed password after token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
+
+      // 2) If success, check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next(
+          new AppError("User belonging to this token does not exist!", 401),
+        );
+      }
+      // 3) Check if user changed password after token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+      // THERE IS A LOGGED IN USER!
+      res.locals.user = currentUser;
+      return next();
+    } catch (err) {
       return next();
     }
-    // THERE IS A LOGGED IN USER!
-    res.locals.user = currentUser;
-    return next();
   }
   next();
-});
+};
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Get token and check if exist
@@ -100,7 +112,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.jwt) {
+    // } else if (req.cookies.jwt) {
+    //   token = req.cookies.jwt;
+  } else if (req.cookies.jwt && req.cookies.jwt !== "loggedout") {
     token = req.cookies.jwt;
   }
 
@@ -114,20 +128,21 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   // 3) If success, check if user still exists
-  const freshUser = await User.findById(decoded.id);
-  if (!freshUser) {
+  const currUser = await User.findById(decoded.id);
+  if (!currUser) {
     return next(
       new AppError("User belonging to this token does not exist!", 401),
     );
   }
   // 4) Check if user changed password after token was issued
-  if (freshUser.changedPasswordAfter(decoded.iat)) {
+  if (currUser.changedPasswordAfter(decoded.iat)) {
     return next(
       new AppError("User recently changed password! Please log in again", 401),
     );
   }
   // Grant Access to Protected Route
-  req.user = freshUser;
+  req.user = currUser;
+  res.locals.user = currUser;
   next();
 });
 

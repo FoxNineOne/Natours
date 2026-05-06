@@ -37,6 +37,7 @@ app.use(
           "blob:",
           "https://*.tile.openstreetmap.org",
           "https://tile.openstreetmap.org",
+          "https://api.tinyfox.dev/img?animal=fox",
         ],
         connectSrc: [
           "'self'",
@@ -71,6 +72,7 @@ app.use("/api", limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
 // Data sanitisation against NoSQL query injections
