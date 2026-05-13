@@ -6,14 +6,15 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
+const bookingRouter = require("./routes/bookingRoutes");
 const viewRouter = require("./routes/viewRoutes");
-const cookieParser = require("cookie-parser");
 
 const app = express();
 app.set("view engine", "pug");
@@ -25,11 +26,12 @@ app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
+        defaultSrc: ["'self'", "https://js.stripe.com/"],
         scriptSrc: [
           "'self'",
           "https://unpkg.com",
           "https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js",
+          "https://js.stripe.com/",
         ],
         imgSrc: [
           "'self'",
@@ -37,7 +39,7 @@ app.use(
           "blob:",
           "https://*.tile.openstreetmap.org",
           "https://tile.openstreetmap.org",
-          "https://api.tinyfox.dev/img?animal=fox",
+          "https://api.tinyfox.dev",
         ],
         connectSrc: [
           "'self'",
@@ -107,11 +109,11 @@ app.use((req, res, next) => {
 });
 
 // Routes
-
 app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server.`, 404));

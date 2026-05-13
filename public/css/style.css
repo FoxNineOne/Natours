@@ -711,6 +711,7 @@ body {
   box-shadow: 1rem 0.5rem 3rem rgba(0, 0, 0, 0.15);
 }
 .cta__img--logo {
+  opacity: 0.75;
   padding: 2rem;
   display: -webkit-box;
   display: -ms-flexbox;
