@@ -35,6 +35,7 @@
     "multer": "^2.1.1",
     "nodemailer": "^8.0.5",
     "nodemailer-brevo-transport": "^2.2.1",
+    "parcel-bundler": "^1.12.5",
     "pug": "^3.0.4",
     "sharp": "^0.34.5",
     "slugify": "^1.6.8",
@@ -51,7 +52,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
-    "parcel-bundler": "^1.12.5",
     "prettier": "^3.8.1"
   }
 }
