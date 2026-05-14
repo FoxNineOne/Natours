@@ -16,7 +16,7 @@ export const bookTour = async (tourId) => {
     // 2) Redirect directly to Stripe Checkout
     window.location.assign(session.data.session.url);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     showAlert("error", err.response?.data?.message || err.message);
   }
 };

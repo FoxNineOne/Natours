@@ -13491,7 +13491,7 @@ var bookTour = exports.bookTour = /*#__PURE__*/function () {
         case 2:
           _context.p = 2;
           _t = _context.v;
-          console.log(_t);
+          // console.log(err);
           (0, _alerts.showAlert)("error", ((_err$response = _t.response) === null || _err$response === void 0 || (_err$response = _err$response.data) === null || _err$response === void 0 ? void 0 : _err$response.message) || _t.message);
         case 3:
           return _context.a(2);
@@ -13669,7 +13669,6 @@ if (userDataForm) userDataForm.addEventListener("submit", function (e) {
   form.append("name", document.getElementById("name").value);
   form.append("email", document.getElementById("email").value);
   form.append("photo", document.getElementById("photo").files[0]);
-  console.log(form);
   (0, _updateSettings.updateSettings)(form, "data");
 });
 if (userPasswordForm) userPasswordForm.addEventListener("submit", /*#__PURE__*/function () {
