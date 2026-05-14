@@ -10,9 +10,11 @@
     "start": "node server.js",
     "start:dev": "nodemon server.js",
     "debug": "ndb server.js",
-    "build:js": "parcel build ./public/js/index.js --dist-dir ./public/js",
+    "watch:js": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
     "start:prod_windows": "SET NODE_ENV=production&&nodemon server.js",
-    "watch:js": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
+    "build:js_old": "parcel build ./public/js/index.js --dist-dir ./public/js",
+    "watch:js_old": "parcel watch --no-hmr ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
