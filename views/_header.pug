@@ -1,7 +1,8 @@
 header.header
     nav.nav.nav--tours
         a.nav__el(href='/') All tours
-        a.nav__el(href='/my-tours') My Bookings
+        if user
+            a.nav__el(href='/my-tours') My Bookings
     .header__logo
         img(src='/img/logo-white.png' alt='Natours Logo')
     nav.nav.nav--user 
