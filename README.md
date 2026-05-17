@@ -66,6 +66,22 @@ https://natours-upou.onrender.com/
 ### Deployment
 - Render
 
+## API Testing & Documentation
+
+A public Postman collection is available for exploring and testing the Natours REST API.
+
+The workspace documents:
+- Authentication & authorization
+- Tour management endpoints
+- Review and booking routes
+- Nested route examples
+- Geospatial querying
+- Stripe checkout session flows
+
+JWT authentication is handled automatically through Postman environment variables for easier testing.
+
+🔗 Postman Collection: https://www.postman.com/foxnineone-376599/natours
+
 ## Application Architecture
 
 The project follows an MVC architecture:
